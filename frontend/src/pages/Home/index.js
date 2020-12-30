@@ -12,22 +12,27 @@ export default function Home() {
   });
 
   return (
-    <div>
-      {
-        videos.map(item => (
-          <div key={item.id}>
-            <div>
-              <h2>{item.video_title}</h2>
+    <>
+      <div>
+        {
+          videos.map(item => (
+            <div classNname="row" key={item.id}>
+              <div className="col-2">
+                <div>
+                  <h2>{item.video_title}</h2>
+                </div>
+                <div>
+                  <video controls preload="metadata" width="422" height="253">
+                    <source src={item.video_path} type="video/mp4" />
+                  </video>
+
+                </div>
+                </div>
+              </div>
+          ))
+        }
             </div>
-            <div>
-              <video width="320" height="240" controls>
-                <source src={item.video_path} type={item.video_type} />
-              </video>
-            </div>
-          </div>
-        ))
-      }
-    </div>
+    </>
   )
 
 }

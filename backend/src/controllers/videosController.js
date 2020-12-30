@@ -15,47 +15,38 @@ module.exports = {
 
     async create(request, response) {
         var video_name = (request.files.video.name).split('.')[0];
-
         var video_title = request.body.title;
+        var video_categorie = request.body.categorie;
         var filename_video = request.files.video.name;
 
         var video_path_local = `../uploads/${filename_video}`;
-        var video_path = `http://localhost:3333/uploads/${filename_video}`;
-
+        var video_path_mp4 = `../uploads/${video_name}.mp4`;
+        var video_path = `http://localhost:3333/uploads/${video_name}.mp4`;
 
         if (!request.files || Object.keys(request.files).length === 0) {
             console.log(err);
         }
 
-           let video_file = request.files.video;
-           video_file.mv(video_path_local, (err) => {
-               if (err) console.log(err);
-           });
+        let video_file = request.files.video;
+        video_file.mv(video_path_local, (err) => {
+            if (err) console.log(err);
+        });
 
-        var command = ffmpeg(video_path_local)
+       ffmpeg(video_path_local)
             .videoCodec('libx264')
-            .videoBitrate('1000k', true)
             .audioCodec('libmp3lame')
+            .inputFPS(29.7)
+            .inputOption('-c:a aac')
             .size('320x240')
             .on('error', function (err) {
-                console.log('An error occurred: ' + err.message);
+                console.log('Err: ' + err.message);
             })
-            .on('end', function () {
-                console.log('Processing finished !');
+            .on('end', async()=>{
+                var res = await connection('videos').insert({ video_title, video_path, video_categorie });
+                return res;
             })
-            .save(`../uploads/${video_name}.mp4`);
-
-        try {
-            if (fs.existsSync(video_path_local)) {
-                var video_type = request.files.video.mimetype;
-                var res = await connection('videos').insert({ video_title, video_path, video_type });
-                console.log(res);
-            }
-        } catch (err) {
-            console.log(err);
-        }
-
-        return response.json(res);
+            .save(video_path_mp4);
+        return response.redirect('http://localhost:3000/home');
     }
 
 

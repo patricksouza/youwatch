@@ -4,7 +4,7 @@ exports.up = function (knex) {
         table.increments('id').primary();
         table.string('video_title');
         table.string('video_path');
-        table.string('video_type');
+        table.string('video_categorie');
     });
 };
 
