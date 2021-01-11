@@ -27,11 +27,11 @@ export default function Home() {
                   </video>
 
                 </div>
-                </div>
               </div>
+            </div>
           ))
         }
-            </div>
+      </div>
     </>
   )
 
