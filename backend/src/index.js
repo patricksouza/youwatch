@@ -6,9 +6,9 @@ const fileUpload = require('express-fileupload');
 
 const routes = require('./routes');
 const app = express();
+
 const PORT = 3333;
-
-
+const HOST = '127.0.0.1';
 
 app.use(fileUpload());
 
@@ -21,6 +21,5 @@ app.use(routes);
 
 app.use('/uploads', express.static(path.resolve(__dirname, '..', '../uploads')));
 
-app.listen(PORT, () => {
-    console.log('PORT', PORT);
-});
+app.listen(PORT, HOST);
+console.log(`Running on http://${HOST}:${PORT}`);
